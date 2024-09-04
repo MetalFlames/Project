@@ -1,0 +1,38 @@
+import re
+import shutil
+from tkinter import *
+from tkinter.ttk import *
+from tkinter.filedialog import askopenfile, askdirectory
+
+
+def regex_search_and_replace(file_path, search_pattern, replace_pattern):
+    backup_path = file_path + '.bak'
+    shutil.copyfile(file_path, backup_path)
+
+    with open(file_path, 'r') as file:
+        file_contents = file.read()
+
+        updated_contents = re.sub(search_pattern, replace_pattern, file_contents)
+
+    with open(file_path, 'w') as file:
+        file.write(updated_contents)
+
+def open_file_window():
+    # directorio = askdirectory(title='Directorio')
+    file = askopenfile(title='PROD File',mode='r', filetypes=[('CSV files', '*.csv')] ,)
+    if file is not None:
+        content = file.read()
+        print(content)
+
+
+root =Tk()
+root.geometry('400x200')
+btn = Button(root, text='Open', command=lambda:open_file_window())
+btn.pack(side=TOP, pady=10)
+# Example usage
+file_path = '12345_11'
+search_pattern = r'__LimitTable PROD {'
+replace_pattern = r'__LimitTable PROD { A'
+regex_search_and_replace(file_path, search_pattern, replace_pattern)
+
+mainloop()
